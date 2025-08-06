@@ -5,9 +5,7 @@ const quizRouter = require('./routing/quizRoute.js');
 const {validateLinkRouter} = require('./routing/validateLinkRoute.js');
 const cors = require('cors');
 
-app.use(cors({
-  origin: config.frontendUrl // or your deployed React URL
-}));
+app.use(cors());
 
 app.use('/', quizRouter)
 app.use('/validatelink', validateLinkRouter);
