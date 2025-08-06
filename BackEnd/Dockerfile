@@ -20,7 +20,7 @@ RUN pip3 install --break-system-packages --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port
-EXPOSE 3001
+EXPOSE 3000
 
 # Start the application
 CMD ["npm", "start"]
