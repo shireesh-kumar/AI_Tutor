@@ -33,8 +33,8 @@ const Main: React.FC<{ onStartQuiz: () => void ; setVideoUrl: (url: string) => v
             }
 
         } catch (error: any) {
-            const errorMessage = 
-                'Validation process failed. Please contact support.';
+            const errorMessage =
+                'Validation process failed. Please contact support.' + error.message;
             setAlertMessage(errorMessage);
             setAlertType('warning');
             setShowError(true);
