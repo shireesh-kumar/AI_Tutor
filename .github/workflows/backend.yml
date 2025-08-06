@@ -51,4 +51,5 @@ jobs:
               -e ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }} \
               -e TEMPERATURE=${{ secrets.TEMPERATURE }} \
               -e MODEL=${{ secrets.MODEL }} \
+              -e FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
