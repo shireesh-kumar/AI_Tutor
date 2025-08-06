@@ -44,4 +44,11 @@ jobs:
 
       - name: Run new container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@18.216.62.137 'sudo docker run -d --name backend -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@18.216.62.137 << 'EOF'
+            sudo docker run -d \
+              --name backend \
+              -p 3000:3000 \
+              -e ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }} \
+              -e TEMPERATURE=${{ secrets.TEMPERATURE }} \
+              -e MODEL=${{ secrets.MODEL }} \
+              ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
