@@ -74,7 +74,7 @@ async function generateQuiz(transcript_data,num_ques,num_options){
         const formattedPrompt = await quizPrompt.format({
         transcript_data: transcript_data,
         num_questions: num_ques,
-        difficulty: (num_options >= 3 && num_options <= 5) ? num_options : 3
+        difficulty: (num_options >= 2 && num_options <= 5) ? num_options : 3
         });
 
         const response = await llm.invoke(formattedPrompt);
