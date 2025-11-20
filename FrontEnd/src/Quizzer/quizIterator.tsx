@@ -91,7 +91,7 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, data }) => {
                     }}
                     className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white text-sm px-4 py-1 rounded-lg font-semibold"
                   >
-                    Hint
+                    Ques TimeStamp
                   </button>
                 </div>
               );
