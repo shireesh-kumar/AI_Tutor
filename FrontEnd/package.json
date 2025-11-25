@@ -16,7 +16,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-player": "^3.0.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "vercel": "^48.10.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

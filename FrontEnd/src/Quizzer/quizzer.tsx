@@ -20,7 +20,7 @@ const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack , videoUrl }) => {
 
     useEffect(() => {
         if (startQuiz) {
-            axios.get(`${config.apiUrl}/quiz`, { params: { url: videoUrl , num_ques: numQuestions, choices: numChoices} })
+            axios.get(`${config.apiUrl}/quiz`, { params: { url: videoUrl , num_ques: numQuestions, difficulty: numChoices} })
                 .then(response => {
                     setQuizData(Object.values(response.data.data.questions));
                     console.log('Quiz data fetched:', response.data);
@@ -49,7 +49,7 @@ const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack , videoUrl }) => {
             id="quiz-video"
             src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get('v')}?enablejsapi=1&modestbranding=1&rel=0&showinfo=0`}
             title="YouTube video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>

@@ -1,0 +1,5 @@
+ai-tutor
+.vscode/
+__pycache__/
+*.pyc
+.env

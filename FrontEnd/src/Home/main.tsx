@@ -18,12 +18,12 @@ const Main: React.FC<{ onStartQuiz: () => void ; setVideoUrl: (url: string) => v
         }
 
         try {
-            const response = await axios.get(`${config.apiUrl}/validatelink`, {
+            const response = await axios.get(`${config.apiUrl}/validate`, {
             params: { url: inputValue }
             });
-            const result = response.data;
-            if (result.success === false) {
-                setAlertMessage(result.message || 'Link validation failed');
+            
+            if (response.data.result === false) {
+                setAlertMessage(response.data.message);
                 setAlertType('error');
                 setShowError(true);
             }
@@ -34,7 +34,7 @@ const Main: React.FC<{ onStartQuiz: () => void ; setVideoUrl: (url: string) => v
 
         } catch (error: any) {
             const errorMessage =
-                'Validation process failed. Please contact support.' + error.message;
+                'Validation process failed at UI level. Please contact support.' + error.message;
             setAlertMessage(errorMessage);
             setAlertType('warning');
             setShowError(true);
