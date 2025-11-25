@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.utils.youtube_utils import validate_youtube_url
+from utils.youtube_utils import validate_youtube_url
 from fastapi.responses import JSONResponse
 
 validate_router = APIRouter()

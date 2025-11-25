@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from app.routers.transcript_router import transcript_router
-from app.routers.quiz_router import quiz_router
-from app.routers.validate_router import validate_router
+from .routers.transcript_router import transcript_router
+from .routers.quiz_router import quiz_router
+from .routers.validate_router import validate_router
 
 from fastapi.middleware.cors import CORSMiddleware
 
