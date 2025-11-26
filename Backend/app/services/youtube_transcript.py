@@ -28,7 +28,11 @@ def get_yt_transcript(url:str) -> Response:
     """
     ydl_opts = {
         'skip_download': True,
+
     }
+
+    if os.path.exists("cookies.txt"):
+        ydl_opts["cookiefile"] = "cookies.txt"
     
     #Moved to UI for lower latency
     # res = validate_youtube_url(url)
