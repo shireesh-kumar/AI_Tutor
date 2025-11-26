@@ -1,5 +1,5 @@
-from utils.youtube_utils import *
-from models.response import Response
+from app.utils.youtube_utils import *
+from app.models.response import Response
 import yt_dlp
 import requests
 import pysrt

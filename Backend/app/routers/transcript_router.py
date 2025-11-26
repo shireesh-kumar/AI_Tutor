@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from services.youtube_transcript import get_yt_transcript
+from app.services.youtube_transcript import get_yt_transcript
 from fastapi.responses import JSONResponse
 
 transcript_router = APIRouter()

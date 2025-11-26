@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from services.youtube_quiz import generate_quiz
+from app.services.youtube_quiz import generate_quiz
 from fastapi.responses import JSONResponse
 
 quiz_router = APIRouter()

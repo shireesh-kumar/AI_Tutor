@@ -1,9 +1,16 @@
 from fastapi import FastAPI
-from .routers.transcript_router import transcript_router
-from .routers.quiz_router import quiz_router
-from .routers.validate_router import validate_router
+from app.routers.transcript_router import transcript_router
+from app.routers.quiz_router import quiz_router
+from app.routers.validate_router import validate_router
 
 from fastapi.middleware.cors import CORSMiddleware
+import sys
+from pathlib import Path
+
+# Add the current directory to Python path
+current_dir = Path(__file__).resolve().parent
+sys.path.insert(0, str(current_dir))
+
 
 
 app = FastAPI()

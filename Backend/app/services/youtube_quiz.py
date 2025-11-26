@@ -1,7 +1,7 @@
-from services.youtube_transcript import get_yt_transcript
-from prompts import SYSTEM_PROMPT
-from models.quiz import QuizResponse
-from models.response import Response
+from app.services.youtube_transcript import get_yt_transcript
+from app.prompts import SYSTEM_PROMPT
+from app.models.quiz import QuizResponse
+from app.models.response import Response
 
 from langchain_anthropic import ChatAnthropic
 

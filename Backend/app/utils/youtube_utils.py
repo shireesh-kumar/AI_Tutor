@@ -1,6 +1,6 @@
 import re
 import requests
-from models.response import Response
+from app.models.response import Response
 
 def fetch_youtube_video_id(url:str) -> str:
     """
