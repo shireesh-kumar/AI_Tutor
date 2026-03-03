@@ -1,7 +1,6 @@
 import Alert from '../Alert/alert';
 import { useState } from 'react';
-import axios from 'axios';
-import config from '../Config';
+import { validateVideoUrl } from '../api';
 
 const Main: React.FC<{ onStartQuiz: () => void ; setVideoUrl: (url: string) => void }> = ({ onStartQuiz, setVideoUrl }) => {
     const [showError, setShowError] = useState(false);
@@ -18,12 +17,10 @@ const Main: React.FC<{ onStartQuiz: () => void ; setVideoUrl: (url: string) => v
         }
 
         try {
-            const response = await axios.get(`${config.apiUrl}/validate`, {
-            params: { url: inputValue }
-            });
+            const response = await validateVideoUrl(inputValue);
             
-            if (response.data.result === false) {
-                setAlertMessage(response.data.message);
+            if (response.result === false) {
+                setAlertMessage(response.message);
                 setAlertType('error');
                 setShowError(true);
             }

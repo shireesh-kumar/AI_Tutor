@@ -1,8 +1,7 @@
 import React, {useEffect } from 'react';
 import QuizSettings from './quizSettings';
-import axios from 'axios';
 import QuizIterator from './quizIterator';
-import config from '../Config';
+import { getQuiz } from '../api';
 
 
 type QuizzerProps = {
@@ -20,10 +19,10 @@ const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack , videoUrl }) => {
 
     useEffect(() => {
         if (startQuiz) {
-            axios.get(`${config.apiUrl}/quiz`, { params: { url: videoUrl , num_ques: numQuestions, difficulty: numChoices} })
+            getQuiz(videoUrl, numQuestions, numChoices)
                 .then(response => {
-                    setQuizData(Object.values(response.data.data.questions));
-                    console.log('Quiz data fetched:', response.data);
+                    setQuizData(Object.values(response.data.questions));
+                    console.log('Quiz data fetched:', response);
                 })
                 .catch(error => {
                     console.error('Error fetching quiz data:', error);
