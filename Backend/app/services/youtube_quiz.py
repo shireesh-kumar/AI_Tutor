@@ -29,12 +29,15 @@ def generate_quiz(url:str, num_questions:int, difficulty:int) -> dict:
     )
     try: 
         agent = ChatAnthropic(
-            temperature= os.getenv("TEMPERATURE"),
-            model_name= os.getenv("MODEL_NAME"),
+            model=os.getenv("MODEL_NAME", "claude-3-5-sonnet-20241022"),
+            temperature=float(os.getenv("TEMPERATURE", "0.7")),
+            anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         ).with_structured_output(QuizResponse)
 
         response = agent.invoke(formatted_prompt)
         return Response.success(data = response.model_dump())
     except Exception as e:
-        return Response.failure(message=str(e), status_code=500)
+        import traceback
+        error_details = traceback.format_exc()
+        return Response.failure(message=f"Quiz generation failed: {str(e)}\nDetails: {error_details}", status_code=500)
     

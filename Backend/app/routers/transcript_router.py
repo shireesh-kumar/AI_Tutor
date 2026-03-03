@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 transcript_router = APIRouter()
 
-@transcript_router.get("/")
+@transcript_router.get("")
 def get_transcript(url:str) ->dict:
     """
     Endpoint to fetch the transcript of a YouTube video.

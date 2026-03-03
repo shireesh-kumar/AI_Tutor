@@ -1,63 +1,51 @@
-from app.utils.youtube_utils import *
+from app.utils.youtube_utils import fetch_youtube_video_id
 from app.models.response import Response
-import yt_dlp
+import os
 import requests
-import pysrt
+from dotenv import load_dotenv
 
-def extract_captions(captions,msg):
-    for caption in captions:
-        if caption.get('ext') == 'srt':
-            try:
-                transcript_response = requests.get(caption['url'])
-                if transcript_response.status_code == 200:
-                    subs = pysrt.from_string(transcript_response.text)
-                    formatted_transcript = "\n".join([f"[{sub.start.minutes:02d}:{sub.start.seconds:02d}] {sub.text}" for sub in subs])
-                    return Response.success(data= formatted_transcript, message=msg)
-                else:
-                    return Response.failure(message="Failed to fetch subtitles.", status_code=transcript_response.status_code)
-            except Exception as e:
-                return Response.failure(message=f"Error fetching subtitles: {str(e)}", status_code=500)
-        
-    return Response.failure(message="Subtitles found but not in SRT format.", status_code=415)
-    
-def get_yt_transcript(url:str) -> Response:
-    """
-    Fetches the transcript for a given YouTube video URL.
-    Args:
-        url (str): The YouTube video URL.   
-    """
-    ydl_opts = {
-        'skip_download': True,
+load_dotenv()
 
-    }
-
-    if os.path.exists("cookies.txt"):
-        ydl_opts["cookiefile"] = "cookies.txt"
-    
-    #Moved to UI for lower latency
-    # res = validate_youtube_url(url)
-    # if not res.result:
-    #     return res
-    
+def get_yt_transcript(url: str) -> Response:
     video_id = fetch_youtube_video_id(url)
     if not video_id:
         return Response.failure(message="Could not extract video ID from URL.", status_code=400)
     
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-            
-            # Check manual subtitles first
-            if 'subtitles' in info and 'en' in info['subtitles']:
-                captions = info['subtitles']['en']
-                return extract_captions(captions,"Manual substitles found")
-            
-            # Check auto-generated captions
-            if 'automatic_captions' in info and 'en' in info['automatic_captions']:
-                captions = info['automatic_captions']['en']
-                return extract_captions(captions, "Auto-generated captions found")
-            
-            return Response.failure(message="No English subtitles found for this video.", status_code=404)
+        API_KEY = os.getenv('API_KEY', 'sk_JDb3IEh60vEw0zwOD9_MRvuwvTipPD9Q1mb1hfE7DEU')
+        api_url = 'https://transcriptapi.com/api/v2/youtube/transcript'
+        params = {'video_url': video_id, 'format': 'json'}
         
+        response = requests.get(
+            api_url, 
+            params=params, 
+            headers={'Authorization': 'Bearer ' + API_KEY}, 
+            timeout=30
+        )
+        response.raise_for_status()
+        
+        transcript_data = response.json()['transcript']
+        
+        # Format transcript as string with timestamps (matching prompt expectations)
+        # formatted_lines = []
+        # for item in transcript_data:
+        #     # Handle different timestamp field names (timestamp, start, start_time, time)
+        #     timestamp = item.get('timestamp') or item.get('start') or item.get('start_time') or item.get('time') or 0
+            
+        #     # Convert to MM:SS format if it's a number (seconds)
+        #     if isinstance(timestamp, (int, float)):
+        #         minutes = int(timestamp // 60)
+        #         seconds = int(timestamp % 60)
+        #         timestamp_str = f"{minutes:02d}:{seconds:02d}"
+        #     else:
+        #         timestamp_str = str(timestamp) if timestamp else "00:00"
+            
+        #     text = item.get('text', '') or item.get('content', '')
+        #     formatted_lines.append(f"[{timestamp_str}] {text}")
+        
+        # formatted_transcript = "\n".join(formatted_lines)
+        
+        return Response.success(data=str(transcript_data), message="Transcript found")
+    
     except Exception as e:
-        return Response.failure(message=f" Transcript Extraction Failed : {str(e)}", status_code=500)
+        return Response.failure(message=f"Transcript extraction failed: {str(e)}", status_code=500)

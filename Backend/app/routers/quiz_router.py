@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 quiz_router = APIRouter()
 
+@quiz_router.get("")
 @quiz_router.get("/")
 def get_quiz(url:str,num_ques,difficulty):
     """
