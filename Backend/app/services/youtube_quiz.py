@@ -22,15 +22,18 @@ def generate_quiz(url:str, num_questions:int, difficulty:int) -> dict:
     if transcript.status_code != 200:
         return transcript
     
+    # Convert transcript_data (list of dicts) to string for quiz generation
+    transcript.data  # This is a list of dicts
+    
     formatted_prompt = SYSTEM_PROMPT.format(
-        transcript_data = transcript.data ,
+        transcript_data = str(transcript.data),
         difficulty=  difficulty,
         num_questions= num_questions
     )
     try: 
         agent = ChatAnthropic(
-            model=os.getenv("MODEL_NAME", "claude-3-5-sonnet-20241022"),
-            temperature=float(os.getenv("TEMPERATURE", "0.7")),
+            model=os.getenv("MODEL_NAME"),
+            temperature=float(os.getenv("TEMPERATURE")),
             anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         ).with_structured_output(QuizResponse)
 

@@ -98,20 +98,31 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, data }) => {
             })}
           </div>
 
-          <div className="flex gap-3 mt-4 shrink-0">
+          <div className="flex flex-wrap gap-3 mt-4 shrink-0">
             <button
               onClick={() => {
                 setShowResult(false);
                 setUserAnswers(Array(data.length).fill(null));
                 setCurrentIndex(0);
               }}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 py-2 rounded-xl font-semibold"
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 py-2 rounded-xl font-semibold min-w-[100px]"
             >
               Try Again
             </button>
             <button
+              onClick={() => {}}
+              className="flex-1 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 py-2 rounded-xl font-semibold min-w-[100px] shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+            >
+              <span className="flex items-center justify-center gap-2">
+                Ask AI
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </span>
+            </button>
+            <button
               onClick={onReturnBack}
-              className="flex-1 bg-slate-700 hover:bg-slate-800 py-2 rounded-xl font-semibold"
+              className="flex-1 bg-slate-700 hover:bg-slate-800 py-2 rounded-xl font-semibold min-w-[100px]"
             >
               Exit
             </button>

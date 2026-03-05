@@ -26,3 +26,19 @@ export async function getQuiz(videoUrl: string, numQuestions: number, difficulty
   return response.data;
 }
 
+export async function createEmbeddings(videoUrl: string) {
+  const response = await axios.post(apiUrl('/embedding'), null, {
+    params: { url: videoUrl }
+  });
+  return response.data;
+}
+
+export async function sendChatMessage(videoUrl: string, message: string, conversationHistory: Array<{role: string, content: string}>) {
+  const response = await axios.post(apiUrl('/chat'), {
+    url: videoUrl,
+    message: message,
+    conversation_history: conversationHistory
+  });
+  return response.data;
+}
+
