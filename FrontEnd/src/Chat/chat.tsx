@@ -4,6 +4,7 @@ import { createEmbeddings, sendChatMessage } from '../api';
 type ChatProps = {
     onReturnBack: () => void;
     videoUrl: string;
+    quizData?: { questions: any[], userAnswers: (string | null)[], score: number, total: number } | null;
 };
 
 // Helper function to parse timestamp from text (e.g., "[00:11]" -> 11 seconds)
@@ -52,7 +53,31 @@ const jumpToTimestamp = (seconds: number, videoUrl: string) => {
     }
 };
 
-const Chat: React.FC<ChatProps> = ({ onReturnBack, videoUrl }) => {
+// Helper function to format quiz data as context message
+const formatQuizContext = (quizData: { questions: any[], userAnswers: (string | null)[], score: number, total: number }): string => {
+    let context = `Quiz Results: Score ${quizData.score}/${quizData.total}\n\n`;
+    
+    quizData.questions.forEach((question, index) => {
+        const userAnswer = quizData.userAnswers[index];
+        const isCorrect = userAnswer === question.correct_answer;
+        const userAnswerText = userAnswer ? `${userAnswer}. ${question.options[userAnswer]}` : 'No answer';
+        const correctAnswerText = `${question.correct_answer}. ${question.options[question.correct_answer]}`;
+        
+        context += `Question ${index + 1}: ${question.question}\n`;
+        context += `Your Answer: ${userAnswerText} ${isCorrect ? '✓' : '✗'}\n`;
+        if (!isCorrect) {
+            context += `Correct Answer: ${correctAnswerText}\n`;
+        }
+        if (question.explanation) {
+            context += `Explanation: ${question.explanation}\n`;
+        }
+        context += `\n`;
+    });
+    
+    return context;
+};
+
+const Chat: React.FC<ChatProps> = ({ onReturnBack, videoUrl, quizData }) => {
     const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +125,15 @@ const Chat: React.FC<ChatProps> = ({ onReturnBack, videoUrl }) => {
                 role: msg.role,
                 content: msg.content
             }));
+
+            // Add quiz context if available (include in every conversation history)
+            if (quizData) {
+                const quizContext = formatQuizContext(quizData);
+                conversationHistory.unshift({
+                    role: 'assistant',
+                    content: `Quiz Context:\n${quizContext}`
+                });
+            }
 
             // Add current user message to history
             conversationHistory.push({

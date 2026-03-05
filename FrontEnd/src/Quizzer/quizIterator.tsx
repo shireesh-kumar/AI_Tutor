@@ -13,12 +13,13 @@ interface QuizQuestion {
 
 interface Quiz {
   onReturnBack: () => void;
+  onAskAI?: (quizData: { questions: QuizQuestion[], userAnswers: (string | null)[], score: number, total: number }) => void;
   data: QuizQuestion[];
 }
 
 
 
-const QuizIterator: React.FC<Quiz> = ({ onReturnBack, data }) => {
+const QuizIterator: React.FC<Quiz> = ({ onReturnBack, onAskAI, data }) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [userAnswers, setUserAnswers] = React.useState<(string | null)[]>(Array(data.length).fill(null));
   const [showResult, setShowResult] = React.useState(false);
@@ -110,7 +111,17 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, data }) => {
               Try Again
             </button>
             <button
-              onClick={() => {}}
+              onClick={() => {
+                if (onAskAI) {
+                  const score = calculateScore();
+                  onAskAI({
+                    questions: data,
+                    userAnswers: userAnswers,
+                    score: score,
+                    total: data.length
+                  });
+                }
+              }}
               className="flex-1 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 py-2 rounded-xl font-semibold min-w-[100px] shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
             >
               <span className="flex items-center justify-center gap-2">

@@ -6,10 +6,11 @@ import { getQuiz } from '../api';
 
 type QuizzerProps = {
     onReturnBack: () => void;
+    onAskAI?: (quizData: { questions: any[], userAnswers: (string | null)[], score: number, total: number }) => void;
     videoUrl: string;
 };
 
-const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack , videoUrl }) => {
+const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack, onAskAI, videoUrl }) => {
 
     const [startQuiz, setStartQuiz] = React.useState<boolean>(false);
     const [quizData, setQuizData] = React.useState<any[]>([]);
@@ -36,7 +37,7 @@ const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack , videoUrl }) => {
       {!startQuiz ? (
           <QuizSettings onReturnBack={onReturnBack} setStartQuiz={setStartQuiz} setNumQuestions={setNumQuestions} setNumChoices={setNumChoices}/>
       ) : (
-          <QuizIterator onReturnBack={onReturnBack} data={quizData} />
+          <QuizIterator onReturnBack={onReturnBack} onAskAI={onAskAI} data={quizData} />
       )}
 
       
