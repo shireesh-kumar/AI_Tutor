@@ -11,7 +11,7 @@ const QuizSettings: React.FC<QuizSettingsProps> = ({ onReturnBack, setStartQuiz,
 
 
     return (
-      <div className="flex-1 bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md h-fit lg:h-[380px] flex flex-col">
+      <div className="flex-1 min-w-0 bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md h-fit lg:h-[380px] flex flex-col">
         <h2 className="text-lg font-semibold mb-4">Quiz Settings</h2>
         <div className="space-y-4 flex-1">
           <div>

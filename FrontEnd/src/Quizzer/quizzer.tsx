@@ -42,7 +42,7 @@ const Quizzer: React.FC<QuizzerProps> = ({ onReturnBack, onAskAI, videoUrl }) =>
 
       
       {/* Right: Clean YouTube Player */}
-      <div className="flex-1 max-w-[700px] bg-black/30 rounded-2xl  shadow-lg h-fit lg:h-[380px] flex flex-col">
+      <div className="flex-1 min-w-0 max-w-[700px] bg-black/30 rounded-2xl shadow-lg h-fit lg:h-[380px] flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <iframe
             className="w-full h-full min-h-[220px] lg:h-full rounded-xl"

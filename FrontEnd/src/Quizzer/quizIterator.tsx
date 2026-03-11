@@ -45,7 +45,7 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, onAskAI, data }) => {
     <>
       {data && data.length > 0 ? (
         showResult ? (
-        <div className="w-full max-w-[700px] h-[80vh] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white flex flex-col overflow-hidden" style={{ height: '380px' }}> 
+        <div className="w-full min-w-0 max-w-[700px] h-[80vh] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white flex flex-col overflow-hidden" style={{ height: '380px' }}> 
           <h2 className="text-xl font-semibold mb-2">Quiz Result</h2>
           <p className="mb-4">You scored {calculateScore()} out of {data.length}</p>
 
@@ -144,7 +144,7 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, onAskAI, data }) => {
             const currentQuestion = data[currentIndex];
 
             return (
-              <div className="flex-1 max-w-[700px] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white space-y-4">
+              <div className="flex-1 min-w-0 max-w-[700px] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white space-y-4">
                 <h2 className="text-lg font-semibold">
                   Question {currentIndex + 1} of {data.length}
                 </h2>
@@ -224,7 +224,7 @@ const QuizIterator: React.FC<Quiz> = ({ onReturnBack, onAskAI, data }) => {
           })()
         )
       ) : (
-      <div className="flex-1 max-w-[700px] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white space-y-4">
+      <div className="flex-1 min-w-0 max-w-[700px] bg-slate-900/40 rounded-2xl p-4 shadow-xl backdrop-blur-md text-white space-y-4">
         <h2 className="text-lg font-semibold">Preparing your quiz...</h2>
         <p className="text-slate-300">Please wait while we generate questions based on the video content.</p>
         

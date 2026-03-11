@@ -182,7 +182,7 @@ const Chat: React.FC<ChatProps> = ({ onReturnBack, videoUrl, quizData }) => {
     return (
         <div className="w-full max-w-[1400px] mx-auto px-4 flex flex-col lg:flex-row gap-4 text-white">
             {/* Left: Chat Box */}
-            <div className="flex-1 max-w-[700px] bg-slate-900/40 rounded-2xl shadow-xl backdrop-blur-md flex flex-col" style={{ height: '380px' }}>
+            <div className="flex-1 min-w-0 max-w-[700px] bg-slate-900/40 rounded-2xl shadow-xl backdrop-blur-md flex flex-col" style={{ height: '380px' }}>
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-slate-700/50 shrink-0">
                     <h2 className="text-lg font-semibold">Chat with AI</h2>
@@ -279,7 +279,7 @@ const Chat: React.FC<ChatProps> = ({ onReturnBack, videoUrl, quizData }) => {
             </div>
 
             {/* Right: Video Player */}
-            <div className="flex-1 max-w-[700px] bg-black/30 rounded-2xl shadow-lg h-fit lg:h-[380px] flex flex-col">
+            <div className="flex-1 min-w-0 max-w-[700px] bg-black/30 rounded-2xl shadow-lg h-fit lg:h-[380px] flex flex-col">
                 <div className="flex-1 flex items-center justify-center">
                     <iframe
                         className="w-full h-full min-h-[220px] lg:h-full rounded-xl"
