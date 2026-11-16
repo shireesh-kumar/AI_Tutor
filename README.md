@@ -90,33 +90,49 @@ AI-Tutor
 ## Backend (FastAPI)
 
 ```bash
-cd backend
+cd Backend
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
-Backend runs at
-
-```
-http://localhost:8000
-```
+Backend runs at `http://localhost:8000`
 
 ---
 
 ## Frontend (React + TypeScript)
 
 ```bash
-cd frontend
+cd FrontEnd
 npm install
 npm run dev
 ```
 
-Frontend runs at
+Frontend runs at `http://localhost:5173`
 
-```
-http://localhost:5173
+---
+
+# 🐳 Docker + Kubernetes (nginx gateway)
+
+Single-node layout:
+
+- **nginx** routes `/` → frontend and `/api/` → backend  
+- **Deployment** keeps N **backend** replicas up (scale only the API)  
+- **Qdrant** runs as one shared vector DB in-cluster  
+
+See **[k8s/README.md](k8s/README.md)** for apply / scale / **safe shutdown** commands.
+
+Quick start (PowerShell from repo root):
+
+```powershell
+# once: scoop install mkcert   then: mkcert -install
+.\scripts\k8s-up.ps1
+# open https://localhost:30443
+
+.\scripts\k8s-scale-backend.ps1 4
+.\scripts\k8s-down.ps1
 ```
 
+**Chat answers use Claude.** Gemini is used only for embeddings (store + query vectors).
 ---
 
 # 🔮 Future Improvements

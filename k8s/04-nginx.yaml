@@ -1,0 +1,111 @@
+# Gateway with local HTTPS (mkcert TLS Secret: yt-tutor-tls).
+# Create the secret first:  .\scripts\mkcert-setup.ps1
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: yt-tutor
+data:
+  default.conf: |
+    upstream frontend {
+        server frontend:80;
+    }
+
+    upstream backend {
+        server backend:8000;
+    }
+
+    # Shared routing (HTTP + HTTPS). Prefer https://localhost:30443 locally.
+    # HTTP kept for port-forward convenience; prod would redirect 80 → 443.
+    server {
+        listen 80;
+        listen 443 ssl;
+        server_name _;
+
+        ssl_certificate     /etc/nginx/certs/tls.crt;
+        ssl_certificate_key /etc/nginx/certs/tls.key;
+
+        location /api/ {
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 300s;
+            proxy_read_timeout 300s;
+        }
+
+        location / {
+            proxy_pass http://frontend;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: yt-tutor
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: tls
+              mountPath: /etc/nginx/certs
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 3
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-config
+        - name: tls
+          secret:
+            secretName: yt-tutor-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: yt-tutor
+spec:
+  type: NodePort
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+    - name: https
+      port: 443
+      targetPort: 443
+      nodePort: 30443

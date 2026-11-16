@@ -19,12 +19,12 @@ QDRANT_URL = os.getenv('QDRANT_URL')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Initialize clients
-# The new SDK automatically handles the API key if provided in the constructor
 client = genai.Client(api_key=GEMINI_API_KEY)
-qdrant_client = QdrantClient(
-    url=QDRANT_URL,
-    api_key=QDRANT_API_KEY,
-)
+
+_qdrant_kwargs = {"url": QDRANT_URL}
+if QDRANT_API_KEY:
+    _qdrant_kwargs["api_key"] = QDRANT_API_KEY
+qdrant_client = QdrantClient(**_qdrant_kwargs)
 
 EMBEDDING_MODEL = "gemini-embedding-001"
 SEGMENTS_PER_EMBEDDING = 5  # Combine 5 transcript segments per embedding

@@ -1,0 +1,76 @@
+# Backend Deployment = keeps N FastAPI pods running (the "D" controller).
+# Service selects those pods; when you scale, Endpoints update automatically.
+# Nginx proxies to this Service name (backend), not to individual pod IPs.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: yt-tutor
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: yt-tutor-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: QDRANT_URL
+              value: http://qdrant:6333
+            - name: QDRANT_API_KEY
+              value: ""
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: yt-tutor-secrets
+                  key: ANTHROPIC_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: yt-tutor-secrets
+                  key: GEMINI_API_KEY
+            - name: MODEL_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: yt-tutor-secrets
+                  key: MODEL_NAME
+            - name: TEMPERATURE
+              valueFrom:
+                secretKeyRef:
+                  name: yt-tutor-secrets
+                  key: TEMPERATURE
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: yt-tutor
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
